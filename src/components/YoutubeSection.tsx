@@ -57,27 +57,28 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
   const [stats, setStats] = useState<YoutubeStats | null>(null);
   const [videos, setVideos] = useState<YoutubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchStats = async () => {
     try {
       const response = await fetch('/api/youtube/stats');
-      if (!response.ok) {
-        const errData = await response.json();
-        console.error('YouTube stats error:', errData.error);
+      const data = await response.json();
+      if (data.error) {
+        setError(data.error);
         return;
       }
-      const data = await response.json();
-      if (data.subscriberCount) setStats(data);
-    } catch (error) {
-      console.error('Error fetching YouTube stats:', error);
+      setStats(data);
+      setError(null);
+    } catch (err) {
+      if (error === null) setError('Network error');
     }
   };
 
   const fetchVideos = async () => {
     try {
       const response = await fetch('/api/youtube/videos');
-      if (!response.ok) return;
       const data = await response.json();
+      if (data.error) return;
       if (!Array.isArray(data)) return;
       const filteredVideos = data.filter((video: YoutubeVideo) => {
         const duration = video.contentDetails.duration;
@@ -90,8 +91,8 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
         return totalSeconds >= 60;
       });
       setVideos(filteredVideos.slice(0, 6));
-    } catch (error) {
-      console.error('Error fetching YouTube videos:', error);
+    } catch (err) {
+      console.error('Error fetching YouTube videos:', err);
     }
   };
 
@@ -100,8 +101,7 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
     fetchVideos();
     setLoading(false);
 
-    // Update subscriber count every second as requested
-    const interval = setInterval(fetchStats, 1000);
+    const interval = setInterval(fetchStats, 300000);
     return () => clearInterval(interval);
   }, []);
 
@@ -153,10 +153,12 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
               <motion.div
                 className="text-7xl md:text-9xl font-black text-neon-pink mb-2 tracking-tighter neon-glow-pink"
               >
-                {stats ? (
+                {error ? (
+                  <span className="text-2xl md:text-3xl font-mono text-red-400">{error}</span>
+                ) : stats ? (
                   <Counter value={parseInt(stats.subscriberCount)} />
                 ) : (
-                  "---"
+                  <span className="text-2xl md:text-4xl font-mono animate-pulse">Loading...</span>
                 )}
               </motion.div>
               <div className="text-xl font-bold text-gray-400 tracking-widest uppercase">
@@ -172,7 +174,7 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
                 </div>
                 <div className="text-left">
                   <div className="text-2xl font-black">
-                    {stats ? parseInt(stats.viewCount).toLocaleString() : "---"}
+                    {error ? "—" : stats ? parseInt(stats.viewCount).toLocaleString() : "---"}
                   </div>
                   <div className="text-xs text-gray-500 font-bold uppercase tracking-wider">{t.youtube.totalViews}</div>
                 </div>
@@ -183,7 +185,7 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
                 </div>
                 <div className="text-left">
                   <div className="text-2xl font-black">
-                    {stats ? parseInt(stats.videoCount).toLocaleString() : "---"}
+                    {error ? "—" : stats ? parseInt(stats.videoCount).toLocaleString() : "---"}
                   </div>
                   <div className="text-xs text-gray-500 font-bold uppercase tracking-wider">{t.youtube.totalVideos}</div>
                 </div>

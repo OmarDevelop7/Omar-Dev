@@ -81,6 +81,7 @@ export const Hero: React.FC<HeroProps> = ({ t }) => {
           transition={{ duration: 1 }}
           viewport={{ once: true }}
           className="relative flex justify-center"
+          style={{ willChange: 'transform' }}
         >
           <div className="relative w-64 h-64 md:w-96 md:h-96">
             {/* Mascot Placeholder - Using a stylized robot icon/shape */}

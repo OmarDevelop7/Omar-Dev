@@ -9,7 +9,7 @@
   --color-neon-green: #00ff9d;
   
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Orbitron", sans-serif;
+  --font-display: var(--font-sans);
   --font-arabic: "Cairo", sans-serif;
 }
 
@@ -106,6 +106,7 @@
   
   .glitch-text {
     position: relative;
+    will-change: transform;
     animation: glitch 1s linear infinite;
   }
 
@@ -113,6 +114,12 @@
     2%, 64% { transform: translate(2px, 0) skew(0deg); }
     4%, 60% { transform: translate(-2px, 0) skew(0deg); }
     62% { transform: translate(0, 0) skew(5deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glitch-text { animation: none; }
+    .scanlines { display: none; }
+    .matrix-bg { opacity: 0 !important; }
   }
 
   .scanlines {

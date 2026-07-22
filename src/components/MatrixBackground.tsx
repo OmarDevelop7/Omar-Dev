@@ -10,27 +10,33 @@ export const MatrixBackground: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const isMobile = window.innerWidth < 768;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const chars = "0101010101010101";
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops: number[] = [];
+    const fontSize = isMobile ? 12 : 14;
+    const columns = Math.ceil(canvas.width / fontSize);
+    const drops = Array.from({ length: columns }, () => Math.random() * -50);
+    const interval = isMobile ? 60 : 40;
 
-    for (let i = 0; i < columns; i++) {
-      drops[i] = 1;
-    }
+    let animId: number;
+    let lastTime = 0;
 
-    const draw = () => {
+    const draw = (time: number) => {
+      if (time - lastTime < interval) {
+        animId = requestAnimationFrame(draw);
+        return;
+      }
+      lastTime = time;
+
       ctx.fillStyle = "rgba(10, 10, 15, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#b44fff22"; // Very faint purple
+      ctx.fillStyle = isMobile ? "#b44fff08" : "#b44fff15";
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
-        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        const text = Math.random() > 0.5 ? "0" : "1";
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
@@ -38,9 +44,11 @@ export const MatrixBackground: React.FC = () => {
         }
         drops[i]++;
       }
+
+      animId = requestAnimationFrame(draw);
     };
 
-    const interval = setInterval(draw, 33);
+    animId = requestAnimationFrame(draw);
 
     const handleResize = () => {
       canvas.width = window.innerWidth;
@@ -50,7 +58,7 @@ export const MatrixBackground: React.FC = () => {
     window.addEventListener('resize', handleResize);
 
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
@@ -58,7 +66,8 @@ export const MatrixBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-[-1] opacity-30"
+      className="fixed inset-0 z-[-1] pointer-events-none"
+      style={{ opacity: 0.12 }}
     />
   );
 };

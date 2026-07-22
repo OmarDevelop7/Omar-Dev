@@ -37,6 +37,7 @@ export const Projects: React.FC<ProjectsProps> = ({ t }) => {
                 <img
                   src={project.image || 'https://picsum.photos/seed/default-project/800/450'}
                   alt={project.title}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   referrerPolicy="no-referrer"
                 />

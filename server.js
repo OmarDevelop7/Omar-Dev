@@ -17,12 +17,15 @@ const ITCH_API_KEY = process.env.ITCH_API_KEY;
 
 app.get("/api/youtube/stats", async (_req, res) => {
   try {
+    if (!YOUTUBE_API_KEY) {
+      return res.status(500).json({ error: "YouTube API key is not configured" });
+    }
     const response = await fetch(
       `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}`
     );
     const data = await response.json();
-    if (!data.items?.length) {
-      return res.status(404).json({ error: "Channel not found" });
+    if (data.error) {
+      return res.status(403).json({ error: data.error.message });
     }
     res.json(data.items[0].statistics);
   } catch (err) {
@@ -33,10 +36,16 @@ app.get("/api/youtube/stats", async (_req, res) => {
 
 app.get("/api/youtube/videos", async (_req, res) => {
   try {
+    if (!YOUTUBE_API_KEY) {
+      return res.status(500).json({ error: "YouTube API key is not configured" });
+    }
     const channelRes = await fetch(
       `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${YOUTUBE_CHANNEL_ID}&key=${YOUTUBE_API_KEY}`
     );
     const channelData = await channelRes.json();
+    if (channelData.error) {
+      return res.status(403).json({ error: channelData.error.message });
+    }
     const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
 
     const playlistRes = await fetch(

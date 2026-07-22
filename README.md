@@ -1,31 +1,68 @@
-# Omar's Developer Portfolio 🎮
+# Omar Dev Portfolio
 
-Personal portfolio for indie game developer & content creator ([@omar_develop](https://www.youtube.com/@omar_develop)). Live YouTube subscriber counter + auto-synced game listings from itch.io, in a cyberpunk/neon design.
+My personal portfolio built with React + TypeScript + Vite + Tailwind CSS.
 
-بورتفوليو شخصي لمطور ألعاب مستقل وصانع محتوى ([@omar_develop](https://www.youtube.com/@omar_develop))، فيه عداد مشتركين لايف من يوتيوب وقائمة ألعاب بتتحدث تلقائي من itch.io، بتصميم سايبربانك/نيون.
+## Stack
 
-🔗 **Live Site:** [omardevloper.netlify.app](https://omardevloper.netlify.app)
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, Motion, GSAP
+- **Backend:** Express.js (API proxy)
+- **Deployment:** Render.com (Web Service)
 
----
+## Features
 
-## ✨ Features
+- Cyberpunk theme with Matrix-style background
+- Arabic/English language support
+- YouTube stats and latest videos integration
+- itch.io games showcase
+- Dark/Light mode
+- Smooth animations with Motion and GSAP
 
-- 🌆 **Cyberpunk / Neon UI** — dark theme with neon accents
-- 📊 **Live YouTube Subscriber Counter** — powered by YouTube Data API v3
-- 🎮 **Auto-Synced Game Listings** — pulled automatically from [itch.io](https://omardeveloper.itch.io) via Netlify Functions
-- ⚡ **Serverless Architecture** — no backend server to maintain
+## Development
 
-## 🛠️ Built With
+```bash
+# Install dependencies
+npm install
 
-- Netlify Functions (serverless)
-- YouTube Data API v3
-- itch.io API integration
+# Start dev server
+npm run dev
 
-## 📬 Contact
+# Build for production
+npm run build
+```
 
-- YouTube: [@omar_develop](https://www.youtube.com/@omar_develop)
-- itch.io: [omardeveloper.itch.io](https://omardeveloper.itch.io)
+## Deployment (Render)
 
----
+1. Push to GitHub
+2. Render → New Web Service → Connect repo
+3. Build: `npm install && npm run build`
+4. Start: `npm start`
+5. Add environment variables:
+   - `YOUTUBE_API_KEY` - Google YouTube Data API v3 key
+   - `YOUTUBE_CHANNEL_ID` - YouTube channel ID (optional)
+   - `ITCH_API_KEY` - itch.io API key
 
-<sub>Made with 🩶 by Omar Bendary</sub>
+## Project Structure
+
+```
+├── index.html            # Entry point
+├── vite.config.ts        # Vite configuration
+├── server.js             # Express server (API proxy + static host)
+├── package.json
+├── src/
+│   ├── main.tsx          # React entry
+│   ├── App.tsx           # Main app component
+│   ├── index.css         # Tailwind + custom styles
+│   ├── translations.ts   # EN/AR translations
+│   ├── lib/              # Utilities
+│   └── components/       # React components
+│       ├── Navbar.tsx
+│       ├── Hero.tsx
+│       ├── About.tsx
+│       ├── Games.tsx
+│       ├── Projects.tsx
+│       ├── YoutubeSection.tsx
+│       ├── Footer.tsx
+│       ├── LoadingScreen.tsx
+│       └── MatrixBackground.tsx
+└── public/               # Static assets
+```

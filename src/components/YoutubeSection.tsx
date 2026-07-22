@@ -61,8 +61,13 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
   const fetchStats = async () => {
     try {
       const response = await fetch('/api/youtube/stats');
+      if (!response.ok) {
+        const errData = await response.json();
+        console.error('YouTube stats error:', errData.error);
+        return;
+      }
       const data = await response.json();
-      setStats(data);
+      if (data.subscriberCount) setStats(data);
     } catch (error) {
       console.error('Error fetching YouTube stats:', error);
     }
@@ -71,8 +76,9 @@ export const YoutubeSection: React.FC<YoutubeSectionProps> = ({ t }) => {
   const fetchVideos = async () => {
     try {
       const response = await fetch('/api/youtube/videos');
+      if (!response.ok) return;
       const data = await response.json();
-      // Filter out videos shorter than 60 seconds (likely Shorts)
+      if (!Array.isArray(data)) return;
       const filteredVideos = data.filter((video: YoutubeVideo) => {
         const duration = video.contentDetails.duration;
         const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);

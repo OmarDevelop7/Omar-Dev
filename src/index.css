@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-neon-purple: #b44fff;
+  --color-neon-cyan: #00f5ff;
+  --color-neon-pink: #ff2d78;
+  --color-neon-green: #00ff9d;
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Orbitron", sans-serif;
+  --font-arabic: "Cairo", sans-serif;
+}
+
+:root {
+  --bg: #0a0a0f;
+  --fg: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+}
+
+.light-mode {
+  --bg: #f5f5f7;
+  --fg: #1d1d1f;
+  --card-bg: rgba(0, 0, 0, 0.05);
+  --card-border: rgba(0, 0, 0, 0.1);
+  
+  --color-neon-purple: #7c3aed;
+  --color-neon-cyan: #0891b2;
+  --color-neon-pink: #db2777;
+  --color-neon-green: #059669;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground selection:bg-neon-cyan selection:text-background overflow-x-hidden transition-colors duration-300;
+    font-family: var(--font-sans);
+  }
+
+  /* Apply Cairo to Arabic content */
+  [lang="ar"] {
+    font-family: var(--font-arabic);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+  
+  [lang="ar"] h1, [lang="ar"] h2, [lang="ar"] h3, [lang="ar"] h4, [lang="ar"] h5, [lang="ar"] h6 {
+    font-family: var(--font-arabic);
+    font-weight: 900;
+  }
+}
+
+.bg-white\/5 {
+  background-color: var(--card-bg);
+}
+
+.border-white\/10 {
+  border-color: var(--card-border);
+}
+
+.text-white {
+  color: var(--fg);
+}
+
+.text-gray-400, .text-gray-300 {
+  color: var(--fg);
+  opacity: 0.7;
+}
+
+.light-mode .text-gray-400, .light-mode .text-gray-300 {
+  color: #4b5563;
+  opacity: 1;
+}
+
+.light-mode .bg-background\/80 {
+  @apply bg-white/80;
+}
+
+.light-mode .bg-background\/30 {
+  @apply bg-gray-100/50;
+}
+
+.light-mode .scanlines {
+  opacity: 0.05;
+}
+
+@layer utilities {
+  .neon-glow-purple {
+    text-shadow: 0 0 5px #b44fff, 0 0 10px #b44fff;
+  }
+  .neon-glow-cyan {
+    text-shadow: 0 0 5px #00f5ff, 0 0 10px #00f5ff;
+  }
+  .neon-glow-pink {
+    text-shadow: 0 0 5px #ff2d78, 0 0 10px #ff2d78;
+  }
+  .neon-border-purple {
+    box-shadow: 0 0 5px #b44fff, inset 0 0 5px #b44fff;
+  }
+  .neon-border-cyan {
+    box-shadow: 0 0 5px #00f5ff, inset 0 0 5px #00f5ff;
+  }
+  
+  .glitch-text {
+    position: relative;
+    animation: glitch 1s linear infinite;
+  }
+
+  @keyframes glitch {
+    2%, 64% { transform: translate(2px, 0) skew(0deg); }
+    4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+    62% { transform: translate(0, 0) skew(5deg); }
+  }
+
+  .scanlines {
+    position: relative;
+    overflow: hidden;
+  }
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 255, 0, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+::-webkit-scrollbar-thumb {
+  background: #b44fff;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00f5ff;
+}
